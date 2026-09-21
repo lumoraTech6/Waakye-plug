@@ -1084,106 +1084,150 @@ function TrustSection() {
 }
 
 // ===================== JOIN NETWORK =====================
+function NetworkCardIcon({ kind }: { kind: 'vendor' | 'rider' | 'support' }) {
+  const styles: Record<typeof kind, { bg: string; color: string; glyph: string }> = {
+    vendor: { bg: 'var(--gold-light)', color: '#8A6800', glyph: '✦' },
+    rider: { bg: '#FFE8E8', color: 'var(--red)', glyph: '●' },
+    support: { bg: 'var(--gold-light)', color: 'var(--deep-red)', glyph: '✉' },
+  }
+  const s = styles[kind]
+  return (
+    <span
+      className="inline-flex items-center justify-center w-10 h-10 rounded-full text-lg font-bold mb-6"
+      style={{ background: s.bg, color: s.color }}
+      aria-hidden
+    >
+      {s.glyph}
+    </span>
+  )
+}
+
 function JoinNetwork() {
   const cards = [
     {
       title: 'Start selling',
       sub: 'For vendors',
-      desc: 'Reach more customers in Ho without running your own delivery. We handle the riders, you focus on the food.',
-      img: 'https://images.unsplash.com/photo-1709837167686-a2e33aad1bf0?w=500&h=400&fit=crop&auto=format',
-      cta: 'Apply on WhatsApp',
+      desc: 'Do you cook for Ho? Join our network to reach new customers. We handle delivery so you can focus on the food.',
+      img: 'https://images.unsplash.com/photo-1709837167686-a2e33aad1bf0?w=800&h=600&fit=crop&auto=format',
+      cta: 'See more',
       href: whatsAppLink('Hi Waakye Plug, I would like to apply as a vendor.'),
-      accent: 'var(--gold)',
-      textAccent: '#8A6800',
+      border: 'var(--gold)',
+      panel: '#FFF9CC',
+      link: '#8A6800',
+      icon: 'vendor' as const,
       sectionId: 'network-vendors',
     },
     {
       title: 'Deliver with us',
       sub: 'For riders',
-      desc: 'Earn on your own schedule. All you need is a motorbike and a phone. Deliver in your community.',
-      img: 'https://images.unsplash.com/photo-1667844141292-0754524d5897?w=500&h=400&fit=crop&auto=format',
-      cta: 'Apply on WhatsApp',
+      desc: 'Join our riders bringing hot meals across Ho. Flexible hours, local routes, and pay per delivery. Motorbike and phone is all you need.',
+      img: 'https://images.unsplash.com/photo-1667844141292-0754524d5897?w=800&h=600&fit=crop&auto=format',
+      cta: 'See more',
       href: whatsAppLink('Hi Waakye Plug, I would like to become a rider.'),
-      accent: 'var(--red)',
-      textAccent: 'var(--red)',
+      border: 'var(--red)',
+      panel: '#FFE8E8',
+      link: 'var(--red)',
+      icon: 'rider' as const,
       sectionId: 'network-riders',
     },
     {
       title: 'Talk to us',
       sub: 'WhatsApp support',
-      desc: 'Order on WhatsApp or message us for help. No app needed. Send a text and we sort you out.',
-      img: 'https://images.unsplash.com/photo-1786634719105-ff6b1666f376?w=500&h=400&fit=crop&auto=format',
+      desc: 'Order on WhatsApp or message us for help. No app needed. Send a text and we will sort you out.',
+      img: 'https://images.unsplash.com/photo-1786634719105-ff6b1666f376?w=800&h=600&fit=crop&auto=format',
       cta: 'Chat now',
       href: whatsAppLink('Hi Waakye Plug, I need help with an order.'),
-      accent: 'var(--gold)',
-      textAccent: '#8A6800',
+      border: 'var(--gold)',
+      panel: '#FFF5D6',
+      link: '#8A6800',
+      icon: 'support' as const,
+      sectionId: 'network-support',
     },
   ]
   return (
-    <section id="network" className="py-24 px-6" style={{ background: 'var(--cream)' }}>
-      <div className="max-w-5xl mx-auto">
+    <section id="network" className="py-28 md:py-36 px-4 sm:px-6" style={{ background: 'var(--cream)' }}>
+      <div className="max-w-7xl mx-auto">
         <h2
-          className="reveal font-extrabold text-center mb-4"
+          className="reveal font-extrabold text-center mb-5"
           style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', color: 'var(--deep-red)', lineHeight: 1.05 }}
         >
           Join our{' '}
           <span style={{ color: 'var(--red)' }}>network</span>
         </h2>
         <p
-          className="reveal text-center font-medium mb-14 text-lg"
+          className="reveal text-center font-medium mb-16 md:mb-20 text-lg max-w-2xl mx-auto leading-relaxed"
           style={{ color: 'var(--deep-red)', opacity: 0.7 }}
           data-delay="100"
         >
           Cooks, riders, and hungry people in Ho. Come join us.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10">
           {cards.map((card, i) => (
-            <div
+            <a
               key={card.title}
-              id={'sectionId' in card ? card.sectionId : undefined}
-              className="reveal rounded-3xl overflow-hidden transition-all hover:scale-[1.03] hover:shadow-xl scroll-mt-28"
+              id={card.sectionId}
+              href={card.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="reveal group flex flex-col min-h-[520px] md:min-h-[560px] rounded-[28px] overflow-hidden scroll-mt-28 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
               data-delay={`${i * 100}`}
               style={{
-                border: `2.5px solid ${card.accent}`,
+                border: `2px solid ${card.border}`,
                 background: '#fff',
-                boxShadow: '0 8px 30px rgba(0,0,0,0.07)',
+                boxShadow: '0 12px 40px rgba(92,10,10,0.08)',
               }}
             >
-              <div className="relative overflow-hidden" style={{ height: 200 }}>
-                <img
-                  src={card.img}
-                  alt={card.title}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-                <div
-                  className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold"
-                  style={{ background: card.accent, color: card.accent === 'var(--gold)' ? 'var(--deep-red)' : '#fff' }}
+              {/* White content — generous padding */}
+              <div className="flex flex-col flex-1 px-8 pt-10 pb-8 md:px-10 md:pt-12 md:pb-10">
+                <NetworkCardIcon kind={card.icon} />
+                <p
+                  className="text-xs font-bold uppercase tracking-wider mb-3"
+                  style={{ color: card.link, opacity: 0.85 }}
                 >
                   {card.sub}
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="font-extrabold text-xl mb-2" style={{ color: 'var(--deep-red)' }}>
+                </p>
+                <h3
+                  className="font-extrabold leading-tight mb-6"
+                  style={{
+                    color: 'var(--deep-red)',
+                    fontSize: 'clamp(1.75rem, 2.5vw, 2.25rem)',
+                  }}
+                >
                   {card.title}
                 </h3>
                 <p
-                  className="font-normal text-sm leading-relaxed mb-5"
+                  className="font-normal text-base md:text-[1.05rem] leading-relaxed flex-1"
                   style={{ color: 'var(--deep-red)', opacity: 0.78 }}
                 >
                   {card.desc}
                 </p>
-                <a
-                  href={card.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 font-bold text-sm underline-offset-2 hover:underline"
-                  style={{ color: card.textAccent }}
+                <span
+                  className="inline-flex items-center gap-2 mt-10 font-bold text-sm uppercase tracking-widest transition-all group-hover:gap-3"
+                  style={{ color: card.link }}
                 >
-                  {card.cta} &rarr;
-                </a>
+                  {card.cta} <span aria-hidden>&rarr;</span>
+                </span>
               </div>
-            </div>
+
+              {/* Bottom visual panel */}
+              <div
+                className="relative h-48 sm:h-52 md:h-56 shrink-0 overflow-hidden"
+                style={{ background: card.panel }}
+              >
+                <img
+                  src={card.img}
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background: `linear-gradient(to top, ${card.panel} 0%, transparent 45%)`,
+                  }}
+                />
+              </div>
+            </a>
           ))}
         </div>
       </div>
