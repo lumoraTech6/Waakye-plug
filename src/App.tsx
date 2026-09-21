@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { logoUrl, waakyeDishUrl } from './assets/images'
 
 const ORDER_URL = 'https://waakye-plug2.vercel.app'
 const WHATSAPP_URL = 'https://wa.me/233599995651'
@@ -147,7 +148,7 @@ function Nav() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <a href="#hero" className="flex items-center gap-2 shrink-0">
-            <img src="/waakye-plug-logo.png" alt="Waakye Plug" className="h-9 w-auto" />
+            <img src={logoUrl} alt="Waakye Plug" className="h-9 w-auto" />
           </a>
 
           {/* Desktop links */}
@@ -428,7 +429,7 @@ function Hero() {
             }}
           >
             <img
-              src="/waakye-dish.jpg"
+              src={waakyeDishUrl}
               alt="A plate of waakye with spaghetti, gari, shito, boiled egg and fried plantain"
               className="w-full object-cover"
               style={{ height: 340 }}
@@ -512,7 +513,7 @@ const menuItems: MenuItem[] = [
     name: 'Waakye',
     tagline: 'The O.G. Rice and beans done right.',
     desc: 'Classic waakye with spaghetti, gari, stew, shito, boiled egg, and fried plantain. No wahala.',
-    img: '/waakye-dish.jpg',
+    img: waakyeDishUrl,
     accent: '#FFD700',
     bg: '#FFF9CC',
     available: true,
@@ -1398,7 +1399,7 @@ function Footer() {
           {/* Logo + tagline */}
           <div className="max-w-xs">
             <img
-              src="/waakye-plug-logo.png"
+              src={logoUrl}
               alt="Waakye Plug"
               className="h-14 w-auto mb-4"
               style={{ filter: 'brightness(0) invert(1)' }}

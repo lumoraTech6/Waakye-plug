@@ -6,13 +6,26 @@ import path from 'node:path'
 import siteConfiguration from './.figma/make/site.json'
 
 
+function resolveDeployBase(): string {
+  const raw = process.env.FIGMA_PUBLIC_URL?.trim()
+  if (!raw) return '/'
+
+  try {
+    const pathname = new URL(raw).pathname
+    if (!pathname || pathname === '/') return '/'
+    return pathname.endsWith('/') ? pathname : `${pathname}/`
+  } catch {
+    return raw.endsWith('/') ? raw : `${raw}/`
+  }
+}
+
 // Vite config — https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   // .figma/make/deploy-preview passes `--mode development` for cached-preview builds.
   const emitSourcemaps = mode === 'development'
 
   return {
-    base: process.env.FIGMA_PUBLIC_URL ? `${process.env.FIGMA_PUBLIC_URL}/` : '/',
+    base: resolveDeployBase(),
     build: {
       sourcemap: emitSourcemaps ? 'inline' : false,
       minify: !emitSourcemaps,
@@ -76,6 +89,8 @@ type FigmaSiteConfiguration = {
 
 /** Applies /.figma/make/site.json to the generated document shell. */
 function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
+  let deployBase = '/'
+
   function sanitizeHtmlValue(value: string | undefined): string {
     return value?.replace(/[^a-zA-Z0-9_-]/g, '') || ''
   }
@@ -85,11 +100,16 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
   function replaceHtmlCommentSlot(html: string, slotName: string, content: string): string {
     return html.replace(`<!-- ${slotName} -->`, content)
   }
+  function publicAssetHref(path: string): string {
+    if (!path || /^https?:\/\//i.test(path)) return path
+    const clean = path.replace(/^\//, '')
+    return `${deployBase}${clean}`
+  }
 
-  const title = config.title ?? "Figma Make App"
+  const title = config.title ?? "Waakye Plug"
   const description = config.description ?? ''
-  const favicon = config.icons?.icon ?? ''
-  const socialImage = config.openGraph?.image ?? ''
+  const faviconPath = config.icons?.icon ?? ''
+  const socialImagePath = config.openGraph?.image ?? ''
   const language = sanitizeHtmlValue(config.language) || 'en'
   const googleAnalyticsId = sanitizeHtmlValue(config.analytics?.googleAnalyticsId)
   const headStart = config.customScripts?.headStart ?? ''
@@ -100,6 +120,9 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
 
   return {
     name: 'figma-site-configuration',
+    configResolved(resolved) {
+      deployBase = resolved.base
+    },
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
         if (!robotsTxt || req.url?.split('?')[0] !== '/robots.txt') return next()
@@ -135,8 +158,12 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
         if (config.robots?.index === false) {
           tags.push({ tag: 'meta', attrs: { name: 'robots', content: 'noindex, nofollow' }, injectTo: 'head' })
         }
-        if (favicon) {
-          tags.push({ tag: 'link', attrs: { rel: 'icon', href: favicon }, injectTo: 'head' })
+        if (faviconPath) {
+          tags.push({
+            tag: 'link',
+            attrs: { rel: 'icon', href: publicAssetHref(faviconPath) },
+            injectTo: 'head',
+          })
         }
         if (title) {
           tags.push({ tag: 'meta', attrs: { property: 'og:title', content: title }, injectTo: 'head' })
@@ -144,7 +171,8 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
         if (description) {
           tags.push({ tag: 'meta', attrs: { property: 'og:description', content: description }, injectTo: 'head' })
         }
-        if (socialImage) {
+        if (socialImagePath) {
+          const socialImage = publicAssetHref(socialImagePath)
           tags.push(
             { tag: 'meta', attrs: { property: 'og:image', content: socialImage }, injectTo: 'head' },
             { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' }, injectTo: 'head' },

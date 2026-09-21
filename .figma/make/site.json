@@ -6,10 +6,10 @@
     "index": true
   },
   "icons": {
-    "icon": "/waakye-plug-logo.png"
+    "icon": "waakye-plug-logo.png"
   },
   "openGraph": {
-    "image": "/waakye-plug-logo.png"
+    "image": "waakye-plug-logo.png"
   },
   "accessibility": {
     "addBypassLinks": true,
