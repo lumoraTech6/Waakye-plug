@@ -1,0 +1,18 @@
+{
+  "title": "Waakye Plug",
+  "description": "Real Ghanaian food delivered hot in Ho, Volta Region. Order waakye from vetted local vendors. Pay on delivery with cash or MoMo.",
+  "language": "en",
+  "robots": {
+    "index": true
+  },
+  "icons": {
+    "icon": "/waakye-plug-logo.png"
+  },
+  "openGraph": {
+    "image": "/waakye-plug-logo.png"
+  },
+  "accessibility": {
+    "addBypassLinks": true,
+    "ignoreReducedMotion": false
+  }
+}
