@@ -9,6 +9,10 @@ function whatsAppLink(message: string) {
   return `${WHATSAPP_URL}?text=${encodeURIComponent(message)}`
 }
 
+function sitePath(segment: string) {
+  return `${import.meta.env.BASE_URL}${segment}`.replace(/\/{2,}/g, '/')
+}
+
 // --- Scroll reveal hook ---
 function useReveal() {
   useEffect(() => {
@@ -1549,17 +1553,13 @@ function Footer() {
           </p>
           <div className="flex gap-6">
             <a
-              href={whatsAppLink('Hi Waakye Plug, I would like to read your Terms of Service.')}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={sitePath('terms')}
               className="text-white text-sm opacity-60 hover:opacity-90 transition-opacity font-normal"
             >
               Terms
             </a>
             <a
-              href={whatsAppLink('Hi Waakye Plug, I would like to read your Privacy Policy.')}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={sitePath('privacy')}
               className="text-white text-sm opacity-60 hover:opacity-90 transition-opacity font-normal"
             >
               Privacy
